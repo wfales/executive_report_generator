@@ -21,7 +21,7 @@ import traceback
 
 class StellarCyberStats():
 
-    def __init__(self, api, tenant, start_date, end_date, org_id):
+    def __init__(self, api, tenant, start_date, end_date, org_id=None):
         self.api = api
         self.daily_date_scale = list(pd.Series(pd.date_range(start_date, end_date, freq='D').strftime('%Y-%m-%d')))
         self.start = start_date

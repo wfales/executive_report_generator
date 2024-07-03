@@ -34,14 +34,16 @@ class StellarCyberAPI():
         return res.json()["access_token"]
 
     def gen_auth(self, url, username, api_key, deployment):
-        if deployment == "On-Prem":
-            auth = base64.b64encode(bytes(username + ":" + api_key, "utf-8")).decode("utf-8")
-            return "Basic " + auth
-        elif deployment == "SaaS":
-            token = self.getAccessToken(url, username, api_key)
-            return "Bearer " + token
-        else:
-            raise Exception("unknown deployment: " + deployment)
+        token = self.getAccessToken(url, username, api_key)
+        return "Bearer " + token
+        # if deployment == "On-Prem":
+        #     auth = base64.b64encode(bytes(username + ":" + api_key, "utf-8")).decode("utf-8")
+        #     return "Basic " + auth
+        # elif deployment == "SaaS":
+        #     token = self.getAccessToken(url, username, api_key)
+        #     return "Bearer " + token
+        # else:
+        #     raise Exception("unknown deployment: " + deployment)
 
     def es_search(self, index, query):
         api_url = f"{self.api_baseurl}/data/{index}/_search"
@@ -56,12 +58,12 @@ class StellarCyberAPI():
             if response and response.status_code == 200:
                 return response.json()
             else:
-                st.error(f"ES query failed against url: {api_url}")
+                # st.error(f"ES query failed against url: {api_url}")
                 return {}
                 # raise RuntimeError("ES query failed:", response, api_url, query)
         except Exception as e:
             print("Send ES query error:", api_url, query)
-            st.error(f"ES query failed against url: {api_url}")
+            # st.error(f"ES query failed against url: {api_url}")
             return {}
 
     def rest_search(self, route, params):
@@ -76,9 +78,9 @@ class StellarCyberAPI():
             if response and response.status_code == 200:
                 return response.json()
             else:
-                raise RuntimeError("ES query failed:", response, api_url, params)
+                raise RuntimeError(f"rest query failed: {response.status_code} \ntext: {response.text} \nheaders: {self.headers}")
         except Exception as e:
-            print("Send ES query error:", api_url, params)
+            print(f"Send rest query error: {e}")
             st.error(f"Query failed against url: {api_url}")
             return {}
 

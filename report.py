@@ -62,8 +62,7 @@ def run_report(api, tenant, start, end, template='report.html.template'):
         mkdir(report_dir)
         copytree(REPORT_TEMPLATE_DIR, template_dir)
 
-    sc_stats = StellarCyberStats(api, tenant, start, end, "")
-
+    sc_stats = StellarCyberStats(api, tenant, start, end)
     df = sc_stats.incident_stats['incidents_df']
     df[df.Is_Critical == True].to_csv(path.join(report_dir, "critical_incidents.csv"))
 
